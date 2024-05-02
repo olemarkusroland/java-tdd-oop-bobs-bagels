@@ -1,47 +1,47 @@
 package com.booleanuk.core.models;
 
+import com.booleanuk.core.DiscountManager;
 import com.booleanuk.core.Inventory;
 
 import java.util.HashMap;
 
 public class Basket {
-    public HashMap<Integer, Product> products;
-    public int capacity = 10;
+    public HashMap<Integer, Product> products = new HashMap<>();
+    public int capacity = 30;
 
-    private int currentId;
+    private int currentId = 1;
 
     private final Inventory inventory = new Inventory();
+    private final DiscountManager discountManger = new DiscountManager(this);
 
-    public Basket() {
-        products = new HashMap<>();
-        currentId = 1;
-    }
+    public double Price() {
+        discountManger.updateDiscounts();
 
-    public double getPrice() {
-        double totalPrice = 0;
-
-        for (Product product : products.values()) {
-            totalPrice += product.getPrice();
-        }
-
-        return totalPrice;
+        return products.values().stream()
+                .mapToDouble(Product::getPrice)
+                .sum();
     }
 
     public void addProduct(String SKU) {
         Product item = inventory.get(SKU);
+
+        if (item == null) {
+            System.out.println("SKU " + SKU + " not found");
+        }
 
         if (products.size() >= capacity) {
             System.out.println("Sorry, you have reached the maximum capacity");
             return;
         }
 
-        if (item != null) {
-            // Map the product to the current ID and increment the ID counter
-            products.put(currentId, item);
-            currentId++; // Increment the ID for the next product
-        } else {
-            System.out.println("Product not found: " + SKU);
-        }
+        products.put(currentId, item);
+        currentId++;
+    }
+
+    public void addDiscount(String sku, double price) {
+        Product item = new Product("DISC", "Discount", sku, -price);
+        products.put(currentId, item);
+        currentId++;
     }
 
     public void addFillingProduct(int bagelID, String SKU) {

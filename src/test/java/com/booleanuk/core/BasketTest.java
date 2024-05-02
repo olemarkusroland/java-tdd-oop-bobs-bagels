@@ -30,7 +30,7 @@ public class BasketTest {
         Assertions.assertEquals("BGLO", firstProduct.get().SKU, "First product should be a Bagel with SKU BGLO.");
 
         // Check the total price
-        Assertions.assertEquals(0.88, basket.getPrice(), 0.01, "Basket price should match the sum of product prices.");
+        Assertions.assertEquals(0.88, basket.Price(), 0.01, "Basket price should match the sum of product prices.");
     }
 
     @Test

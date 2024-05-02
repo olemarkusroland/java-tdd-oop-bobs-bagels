@@ -1,6 +1,6 @@
 package com.booleanuk.core.models;
 
-public abstract class Product {
+public class Product {
     public String SKU;
     public String Name;
     public String Variant;
